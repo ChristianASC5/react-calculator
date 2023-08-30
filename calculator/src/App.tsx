@@ -1,14 +1,61 @@
-import { useState } from 'react'
+import { Reducer, useReducer, useState } from 'react'
 import './App.css'
 
+const enum Operator {
+  Default = '',
+  Division = '÷',
+  Multiplication = '*',
+  Addition = '+',
+  Subtraction = '-',
+}
+
+const enum ACTION_TYPE {
+  ADD_DIGIT = 'add_digit',
+  REMOVE_DIGIT = 'delete-digit',
+  SET_OPERATION = 'set-operation',
+  CLEAR = 'clear',
+  EVALUATE = 'evaluate',
+}
+
+interface CalculatorAction {
+  type: ACTION_TYPE;
+  digit?: string;
+  operator?: Operator;
+}
+
+interface CalculatorState {
+  currentOperand: string;
+  previousOperand: string;
+  operation: string;
+}
+
+const initialCalculatorState: CalculatorState = {
+  currentOperand: '0',
+  previousOperand: '0',
+  operation: Operator.Default,
+}
+
+
+const calculatorReducer = (state: CalculatorState, { type, ...symbol}: CalculatorAction) => {
+  switch(type) {
+    case ACTION_TYPE.ADD_DIGIT:
+      return {
+        ...state,
+        currentOperand: (state.currentOperand === 'O' ? symbol.digit : state.currentOperand + symbol.digit) || ''
+      }
+  }
+  return state;
+}
+
 function App() {
-  const [count, setCount] = useState(0)
+  // const [count, setCount] = useState(0)
+  const [{ currentOperand, previousOperand, operation }, dispatch] = useReducer(calculatorReducer, initialCalculatorState);
 
   return (
     <div className='calculator-grid'>
       <div className='output'>
-        <div className='previous-operand'>123</div>
-        <div className='current-operand'>123</div>
+        <div className='previous-operand'> {previousOperand} {operation}</div>
+        <div className='current-operand'> {currentOperand} </div>
       </div>
       <button className='span-two'>AC</button>
       <button>DEL</button>
