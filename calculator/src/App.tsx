@@ -1,4 +1,4 @@
-import { Reducer, useReducer, useState } from 'react'
+import { useReducer, useState } from 'react'
 import './App.css'
 
 const enum Operator {
